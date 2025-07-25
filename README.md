@@ -44,6 +44,99 @@ Different flipper structures can be achieved by modifying the [configuration fil
 
 
 
+## Installation Guide
+
+### ✅ New Approach (Using Conda)
+
+This method isolates dependencies via `conda` and installs Isaac Sim components from PyPI.
+
+#### 1. Create and activate conda environment
+
+```bash
+conda create -n isaac_flipper python=3.10
+conda activate isaac_flipper
+```
+
+#### 2. Install dependencies
+
+```bash
+pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121
+pip install --upgrade pip
+pip install isaacsim==4.2.0.2 \
+            isaacsim-extscache-physics==4.2.0.2 \
+            isaacsim-extscache-kit==4.2.0.2 \
+            isaacsim-extscache-kit-sdk==4.2.0.2 \
+            --extra-index-url https://pypi.nvidia.com
+```
+
+#### 3. Clone and install Isaac Lab
+
+```bash
+git clone --branch v1.2.0 https://github.com/isaac-sim/IsaacLab.git
+cd IsaacLab/
+./isaaclab.sh -i
+cd ..
+```
+
+#### 4. Clone FTR-Benchmark and install requirements
+
+```bash
+git clone https://github.com/nubot-nudt/FTR-Benchmark.git
+cd FTR-Benchmark
+pip install -r requirements.txt 
+```
+
+#### 5. Start training
+
+Note : The `PYTHONPATH` is set to the current working directory to ensure that the scripts can find the necessary modules.
+
+```bash
+PYTHONPATH=$(pwd) python scripts/ftr_algo/train.py \
+  --task Ftr-Crossing-Direct-v0 \
+  --num_envs 256 \
+  --algo sac \
+  --terrain cur_base \
+  --epoch 30000 \
+  --experiment test \
+  --headless
+```
+
+#### 5. Starting play mode
+```bash
+PYTHONPATH=$(pwd) python scripts/ftr_algo/train.py \
+  --task Ftr-Crossing-Direct-v0 \
+  --num_envs 8 \
+  --algo sac \
+  --terrain cur_base \
+  --epoch 30000 \
+  --experiment logs/test/model_30000.pt \
+  --play
+```
+
+#### 🧠 Multi-Agent Task Training
+
+```bash
+PYTHONPATH=$(pwd) python scripts/skrl/train.py \
+  --task Ftr-Prey-v0 \
+  --num_envs 64 \
+  --algorithm IPPO \
+  --headless \
+  --seed 20
+```
+
+---
+
+#### 🤖 Quadruped & Humanoid Robots Training
+
+```bash
+PYTHONPATH=$(pwd) python scripts/skrl/train.py \
+  --task Isaac-Velocity-Rough-Anymal-D-v1 \
+  --num_envs 8
+```
+
+---
+
+# 🧭 Old Approach (Native Isaac Sim Runtime)
 ## Install
 
 ### Isaac Sim
